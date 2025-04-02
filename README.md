@@ -1,19 +1,83 @@
-1. Create a AWS ECR Repository and copy the URI
+# squareboat-media-service AWS ECR Setup Guide
 
-2. Retrieve an authentication token and authenticate your Docker client to your registry. Use the AWS CLI:
-   `aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin uri`
+This document outlines the steps to build, tag, and push the squareboat-media-service Docker image to AWS ECR (Elastic Container Registry).
 
-   > Note: if you receive an error using the AWS CLI, make sure that you have the latest version of the AWS CLI and Docker installed.
+## Prerequisites
 
-3. Build your Docker image using the following command. For information on building a Docker file from scratch, see the instructions here . You can skip this step if your image has already been built:
+- AWS CLI installed and configured
+- Docker installed
+- Access to your AWS account
+- Valid AWS credentials with permissions to create and push to ECR repositories
 
-`docker build -t qyubic-media-service .`
+## Setup Instructions
 
-4. After the build is completed, tag your image so you can push the image to this repository:
+### 1. Create an AWS ECR Repository
 
-`docker tag qyubic-media-service:latest uri:latest`
+First, create an ECR repository in your AWS account:
 
-5. Run the following command to push this image to your newly created AWS repository:
-   `docker push uri:latest`
+```bash
+aws ecr create-repository --repository-name squareboat-media-service --region us-east-1
+```
 
-6. Now Update the uri and tag in the apps/media-service/serverless.yml example:- uri:tag
+Take note of the repository URI provided in the response. It will look something like:
+`{account-id}.dkr.ecr.us-east-1.amazonaws.com/squareboat-media-service`
+
+### 2. Authenticate Docker with AWS ECR
+
+Run the following command to authenticate your Docker client with your AWS ECR registry:
+
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin {your-repository-uri}
+```
+
+> **Note:** If you receive an error, ensure that you have the latest versions of both AWS CLI and Docker installed.
+
+### 3. Build the Docker Image
+
+Build your Docker image using:
+
+```bash
+docker build -t squareboat-media-service .
+```
+
+> Skip this step if your image has already been built.
+
+### 4. Tag the Docker Image
+
+Tag your image with the ECR repository URI:
+
+```bash
+docker tag squareboat-media-service:latest {your-repository-uri}:latest
+```
+
+### 5. Push the Image to AWS ECR
+
+Push your tagged image to the ECR repository:
+
+```bash
+docker push {your-repository-uri}:latest
+```
+
+### 6. Update Serverless Configuration
+
+After successfully pushing the image, update the URI and tag in your serverless configuration file:
+
+Open `apps/media-service/serverless.yml` and update the image reference to:
+
+```yaml
+# Example location in serverless.yml
+functions:
+  mediaService:
+    image: {your-repository-uri}:latest
+```
+
+## Troubleshooting
+
+- Ensure your AWS CLI is properly configured with the correct credentials
+- Verify Docker is running correctly on your system
+- Check that you have the necessary permissions to push to the ECR repository
+- If you encounter authentication issues, try running the authentication command again
+
+## Next Steps
+
+Once the image is successfully pushed to ECR and your serverless.yml is updated, you can deploy your service using the appropriate deployment commands for your infrastructure.
