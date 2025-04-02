@@ -1,0 +1,48 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/media-service/src",
+  "projects": {
+    "boat": {
+      "type": "library",
+      "root": "libs/boat",
+      "entryFile": "index",
+      "sourceRoot": "libs/boat/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/boat/tsconfig.lib.json"
+      }
+    },
+    "media-worker": {
+      "type": "library",
+      "root": "libs/media-worker",
+      "entryFile": "index",
+      "sourceRoot": "libs/media-worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/media-worker/tsconfig.lib.json"
+      }
+    },
+    "media-service": {
+      "type": "application",
+      "root": "apps/media-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/media-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/media-service/tsconfig.app.json"
+      }
+    },
+    "serverless": {
+      "type": "library",
+      "root": "libs/serverless",
+      "entryFile": "index",
+      "sourceRoot": "libs/serverless/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/serverless/tsconfig.lib.json"
+      }
+    }
+  },
+  "monorepo": true,
+  "root": "apps/media-service",
+  "compilerOptions": {
+    "webpack": false,
+    "tsConfigPath": "apps/tsconfig.app.json"
+  }
+}

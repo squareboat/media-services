@@ -1,0 +1,14 @@
+func:
+  image: 851725511059.dkr.ecr.us-east-1.amazonaws.com/media-services:latest
+  # handler: dist/apps/media-service/src/main.handler
+  memorySize: 2048
+  ephemeralStorageSize: 5024
+  iamRoleStatementsName: ${self:custom.roles.mediaServiceRole.name}
+  iamRoleStatements: ${self:custom.roles.mediaServiceRole.roles}
+  events:
+    - s3:
+        bucket: ${env:APP_S3_BUCKET}
+        event: s3:ObjectCreated:*
+        existing: true
+        rules:
+          - prefix: originals/

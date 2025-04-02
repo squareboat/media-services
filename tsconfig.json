@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@config/*": ["config/*"],
+      "@libs/boat": ["libs/boat/src"],
+      "@libs/boat/*": ["libs/boat/src/*"],
+      "@libs/media-worker": ["libs/media-worker/src"],
+      "@libs/media-worker/*": ["libs/media-worker/src/*"],
+      "@libs/serverless": ["libs/serverless/src"],
+      "@libs/serverless/*": ["libs/serverless/src/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

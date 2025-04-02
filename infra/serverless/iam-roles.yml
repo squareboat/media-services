@@ -1,0 +1,15 @@
+common:
+  roles:
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "*"
+
+mediaServiceRole:
+  name: ${env:APP_ENV}-${env:APP_NAME}-role
+  roles:
+    - Effect: "Allow"
+      Action:
+        - s3:*
+      Resource:
+        - arn:aws:s3:::asdadasdas/*

@@ -1,0 +1,36 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: squareboat000890
+service: media-services
+useDotenv: true
+variablesResolutionMode: 20210219
+
+package:
+  individually: true
+
+plugin:
+  - serverless-offline
+
+custom:
+  roles: ${file(./infra/serverless/iam-roles.yml)}
+
+provider:
+  name: aws
+  stage: production
+  timeout: 900
+  runtime: nodejs18.x
+  region: ${env:APP_AWS_REGION}
+  lambdaHashingVersion: 20201221
+  versionFunctions: false
+  logs:
+    restApi: true
+    websocket: true
+  iamRoleStatements: ${self:custom.roles.common.roles}
+  environment: ${file(./infra/serverless/env.yml):environment}
+  logRetentionInDays: 5
+  ecr:
+    images:
+      media-services:
+        path: ./
+
+functions:
+  media-service: ${file(./apps/media-service/serverless.yml):func}
