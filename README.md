@@ -1,3 +1,5 @@
+<p align="center"><a href="https://aws.amazon.com" target="_blank"><img src="https://avatars.githubusercontent.com/u/2232217?s=200&v=4" width="400" alt="AWS Logo"></a></p>
+
 # squareboat-media-service AWS ECR Setup Guide
 
 This document outlines the steps to build, tag, and push the squareboat-media-service Docker image to AWS ECR (Elastic Container Registry).
