@@ -13,8 +13,11 @@ export class MediaCompressHandler {
   async handle(events: Record<string, any>): Promise<Record<string, any>> {
     for (const record of events.Records) {
       if (!record.s3) return;
-      const key: string = record.s3.object.key;
-      console.log(record.s3.object.key);
+      // S3 event keys are URL-encoded, with spaces as "+"
+      const key: string = decodeURIComponent(
+        record.s3.object.key.replace(/\+/g, " ")
+      );
+      console.log(key);
       const meta = await Storage.disk("original").meta(key);
       const { contentType } = meta;
       if (contentType?.match("video.*")) {
