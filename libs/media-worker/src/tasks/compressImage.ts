@@ -32,6 +32,9 @@ export class CompressImage {
         quality: get(options, "quality", 90),
       };
       s.toFormat("webp", formatOptions);
+    } else if (options.format) {
+      // e.g. "png": convert, so the bytes match the configured format
+      s.toFormat(options.format);
     }
 
     if (options.width && options.height) {
