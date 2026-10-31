@@ -6,6 +6,7 @@ export default registerAs(
   () =>
     ({
       isLocal: process.env.NODE_ENV === "local",
+      ffmpegPath: process.env.FFMPEG_PATH,
       storageDisk: "compress",
       videos: {
         isThumbnail: false,

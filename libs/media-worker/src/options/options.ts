@@ -2,6 +2,8 @@ import { ModuleMetadata, Type } from "@nestjs/common";
 import { ImageVariant, VideoVariant } from "./interface";
 export interface MediaWorkerOptions {
   isLocal: boolean;
+  /** ffmpeg binary used when `isLocal` is true (defaults to <cwd>/ffmpeg) */
+  ffmpegPath?: string;
   isLambdaEnvironment: boolean;
   storageDisk: string;
   images: {
@@ -19,7 +21,7 @@ export interface MediaWorkerAsyncOptionsFactory {
 
 export interface PdfWorkerAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   name?: string;
-  useExisting?: Type<MediaWorkerOptions>;
+  useExisting?: Type<MediaWorkerAsyncOptionsFactory>;
   useClass?: Type<MediaWorkerAsyncOptionsFactory>;
   useFactory?: (
     ...args: any[]

@@ -16,7 +16,7 @@ export class MediaWorkerModule {
    * Register options
    * @param options
    */
-  static register(options: NotificationOptions): DynamicModule {
+  static register(options: MediaWorkerOptions): DynamicModule {
     return {
       global: false,
       module: MediaWorkerModule,
@@ -38,12 +38,15 @@ export class MediaWorkerModule {
     return {
       global: false,
       module: MediaWorkerModule,
-      imports: [],
+      imports: options.imports || [],
       providers: [
         MediaWorkerLibService,
         CompressImage,
         CompressVideo,
         this.createPdfWorkerOptionsProvider(options),
+        ...(options.useClass
+          ? [{ provide: options.useClass, useClass: options.useClass }]
+          : []),
       ],
       exports: [MediaWorkerLibService],
     };
@@ -61,7 +64,8 @@ export class MediaWorkerModule {
     }
 
     const inject = [
-      (options.useClass || options.useExisting) as Type<MediaWorkerOptions>,
+      (options.useClass ||
+        options.useExisting) as Type<MediaWorkerAsyncOptionsFactory>,
     ];
 
     return {

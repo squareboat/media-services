@@ -2,12 +2,11 @@
 org: squareboat000890
 service: media-services
 useDotenv: true
-variablesResolutionMode: 20210219
 
 package:
   individually: true
 
-plugin:
+plugins:
   - serverless-offline
 
 custom:
@@ -17,14 +16,15 @@ provider:
   name: aws
   stage: production
   timeout: 900
-  runtime: nodejs18.x
+  runtime: nodejs24.x
   region: ${env:APP_AWS_REGION}
-  lambdaHashingVersion: 20201221
   versionFunctions: false
   logs:
     restApi: true
     websocket: true
-  iamRoleStatements: ${self:custom.roles.common.roles}
+  iam:
+    role:
+      statements: ${self:custom.roles.common.roles}
   environment: ${file(./infra/serverless/env.yml):environment}
   logRetentionInDays: 5
   ecr:

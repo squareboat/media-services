@@ -1,5 +1,5 @@
 // lambda.ts
-import { Context, Callback, Handler } from "aws-lambda";
+import type { Context, Handler } from "aws-lambda";
 import awsLambdaFastify from "@fastify/aws-lambda";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { INestApplication } from "@nestjs/common";
@@ -38,15 +38,13 @@ export class ApiAndEventServer {
    * @returns Handler
    */
   make(): Handler {
-    return async (
-      event: Record<string, any>,
-      context: Context,
-      callback: Callback
-    ) => {
+    // Async handler with two parameters: the nodejs24.x runtime refuses to
+    // start a handler that takes a callback (Runtime.CallbackHandlerDeprecated).
+    return async (event: Record<string, any>, context: Context) => {
       console.log("event @@@> ", event);
 
       if (event.source === "serverless-plugin-warmup") {
-        return callback(null, "Lambda is warm!");
+        return "Lambda is warm!";
       }
 
       if (!this.cachedApiServer || !this.cachedAppInstance) {
@@ -64,7 +62,7 @@ export class ApiAndEventServer {
         strict: false,
       });
 
-      return task.handle(event, context, callback);
+      return task.handle(event, context);
     };
   }
 

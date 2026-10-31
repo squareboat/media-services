@@ -1,10 +1,15 @@
 func:
   image: 851725511059.dkr.ecr.us-east-1.amazonaws.com/media-services:latest
-  # handler: dist/apps/media-service/src/main.handler
+  # handler: dist/apps/media-service/src/main.handler  # zip deploy: needs NODE_OPTIONS from infra env.yml
   memorySize: 2048
   ephemeralStorageSize: 5024
-  iamRoleStatementsName: ${self:custom.roles.mediaServiceRole.name}
-  iamRoleStatements: ${self:custom.roles.mediaServiceRole.roles}
+  # Serverless v4 gives this function its own IAM role. Keep the provider's
+  # statements in it (inheritStatements) and add the S3 access it needs.
+  iam:
+    inheritStatements: true
+    role:
+      name: ${self:custom.roles.mediaServiceRole.name}
+      statements: ${self:custom.roles.mediaServiceRole.roles}
   events:
     - s3:
         bucket: ${env:APP_S3_BUCKET}

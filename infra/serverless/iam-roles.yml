@@ -8,8 +8,16 @@ common:
 mediaServiceRole:
   name: ${env:APP_ENV}-${env:APP_NAME}-role
   roles:
+    # read the uploaded originals (Storage disk "original": meta() + get())
     - Effect: "Allow"
       Action:
-        - s3:*
+        - s3:GetObject
       Resource:
-        - arn:aws:s3:::asdadasdas/*
+        - arn:aws:s3:::${env:AWS_S3_ORIGINAL_BUCKET}/*
+    # write the variants (Storage disk "compress": put(), multipart for videos)
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+        - s3:AbortMultipartUpload
+      Resource:
+        - arn:aws:s3:::${env:AWS_S3_COMPRESS_BUCKET}/*

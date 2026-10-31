@@ -6,6 +6,7 @@ This document outlines the steps to build, tag, and push the squareboat-media-se
 
 ## Prerequisites
 
+- Node.js 24 (24.15 or newer). The Lambda runtime is `nodejs24.x`.
 - AWS CLI installed and configured
 - Docker installed
 - Access to your AWS account
@@ -72,6 +73,16 @@ functions:
   mediaService:
     image: {your-repository-uri}:latest
 ```
+
+## Development
+
+- `npm run build`, `npm run lint`, `npm test`
+- Local runs (`NODE_ENV=local`): set `FFMPEG_PATH` to a local ffmpeg binary (the `ffmpeg` file in this repo is for Linux x86-64; the Docker image copies it to `/usr/bin/ffmpeg`).
+- Local S3: set `AWS_S3_ENDPOINT` (and `AWS_S3_FORCE_PATH_STYLE=true`) to use an S3-compatible server such as MinIO.
+
+## Lambda runtime and ESM
+
+NestJS 12 is ESM only and this app is CommonJS, so on Lambda it runs with `NODE_OPTIONS=--experimental-require-module` (set in the Dockerfile and in the provider environment). Lambda drops its own `--no-experimental-require-module` flag when NODE_OPTIONS asks for this, but per the [AWS Lambda Node.js runtime docs](https://docs.aws.amazon.com/lambda/latest/dg/lambda-nodejs.html), functions that use experimental Node.js features aren't eligible for the Lambda SLA or AWS Support. The alternative is to build the app as ESM.
 
 ## Troubleshooting
 

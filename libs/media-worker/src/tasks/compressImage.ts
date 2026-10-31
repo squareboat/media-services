@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import * as sharp from "sharp";
+import sharp from "sharp";
 import { get, pick } from "lodash";
 import { Storage } from "@squareboat/nest-storage";
-import { CompressImageResponse, MediaWorkerOptions } from "../options";
+import type { CompressImageResponse, MediaWorkerOptions } from "../options";
 import { MEDIA_WORKER_LIB_OPTIONS } from "../constant";
 
 @Injectable()
@@ -32,6 +32,9 @@ export class CompressImage {
         quality: get(options, "quality", 90),
       };
       s.toFormat("webp", formatOptions);
+    } else if (options.format) {
+      // e.g. "png": convert, so the bytes match the configured format
+      s.toFormat(options.format);
     }
 
     if (options.width && options.height) {
@@ -52,11 +55,12 @@ export class CompressImage {
 
     s.withMetadata();
 
-    return {
-      meta: await s.metadata(),
-      stats: await s.stats(),
-      buffer: await s.toBuffer(),
-    };
+    const meta = await s.metadata();
+    const stats = await s.stats();
+    const { data, info } = await s.toBuffer({ resolveWithObject: true });
+
+    // `meta` describes the input image; `format` is the format written out
+    return { meta, stats, buffer: data, format: info.format };
   }
 
   async compressImage(
@@ -114,12 +118,23 @@ export class CompressImage {
 
       newPromises.push(
         Storage.disk(this.options.storageDisk).put(path, response.res.buffer, {
-          mimeType: response.res.meta.format,
+          mimeType: `image/${response.res.format}`,
         })
       );
     }
 
-    await Promise.allSettled(newPromises);
+    // Wait for every upload, then fail the invocation if any of them failed,
+    // so Lambda retries the S3 event (or sends it to the DLQ)
+    const results = await Promise.allSettled(newPromises);
+    const failed = results.filter(
+      (r): r is PromiseRejectedResult => r.status === "rejected"
+    );
+    if (failed.length) {
+      throw new AggregateError(
+        failed.map((r) => r.reason),
+        `${failed.length} of ${results.length} image variant uploads failed`
+      );
+    }
 
     return payload;
   }

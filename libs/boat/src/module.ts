@@ -22,7 +22,8 @@ const getFactory = (key: string) => ({
     EventModule,
     DiscoveryModule,
     StorageModule.registerAsync({
-      imports: [ConfigService],
+      // nest-storage 1.x passes `imports` to Nest, so this must list modules
+      imports: [ConfigModule],
       useFactory: (config: ConfigService) => {
         return config.get("storage");
       },
