@@ -10,7 +10,7 @@ import { ConsoleModule } from "@squareboat/nest-console";
     BoatModule,
     ConsoleModule,
     MediaWorkerModule.registerAsync({
-      imports: [ConfigModule, ConsoleModule],
+      imports: [ConfigModule],
       useFactory: (config: ConfigService) => config.get("media"),
       inject: [ConfigService],
     }),

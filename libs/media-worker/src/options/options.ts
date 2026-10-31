@@ -19,7 +19,7 @@ export interface MediaWorkerAsyncOptionsFactory {
 
 export interface PdfWorkerAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   name?: string;
-  useExisting?: Type<MediaWorkerOptions>;
+  useExisting?: Type<MediaWorkerAsyncOptionsFactory>;
   useClass?: Type<MediaWorkerAsyncOptionsFactory>;
   useFactory?: (
     ...args: any[]
