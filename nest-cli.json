@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/media-service/src",
   "projects": {
@@ -43,6 +44,7 @@
   "root": "apps/media-service",
   "compilerOptions": {
     "webpack": false,
+    "deleteOutDir": true,
     "tsConfigPath": "apps/tsconfig.app.json"
   }
 }

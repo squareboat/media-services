@@ -6,6 +6,7 @@ This document outlines the steps to build, tag, and push the squareboat-media-se
 
 ## Prerequisites
 
+- Node.js 24 (24.15 or newer). The Lambda runtime is `nodejs24.x`.
 - AWS CLI installed and configured
 - Docker installed
 - Access to your AWS account
@@ -72,6 +73,10 @@ functions:
   mediaService:
     image: {your-repository-uri}:latest
 ```
+
+## Development
+
+- `npm run build`, `npm run lint`, `npm test`
 
 ## Troubleshooting
 

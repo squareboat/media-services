@@ -1,17 +1,16 @@
-FROM public.ecr.aws/lambda/nodejs:18-x86_64 as development
+FROM public.ecr.aws/lambda/nodejs:24-x86_64 AS development
 COPY package*.json ${LAMBDA_TASK_ROOT}
-RUN npm install -g @nestjs/cli
-RUN npm install --only=development
+RUN npm ci
 COPY . ${LAMBDA_TASK_ROOT}
 ENV NODE_OPTIONS=--max_old_space_size=2048
 RUN npm run build
 
-FROM public.ecr.aws/lambda/nodejs:18-x86_64 as production
+FROM public.ecr.aws/lambda/nodejs:24-x86_64 AS production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 COPY package*.json ${LAMBDA_TASK_ROOT}
 COPY --from=development ${LAMBDA_TASK_ROOT}/.env ${LAMBDA_TASK_ROOT}
 COPY ffmpeg /usr/bin
-RUN npm install --omit=dev
+RUN npm ci --omit=dev
 COPY --from=development ${LAMBDA_TASK_ROOT}/dist ./dist
 CMD ["dist/apps/media-service/src/main.handler"]

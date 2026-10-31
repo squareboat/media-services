@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import * as sharp from "sharp";
+import sharp from "sharp";
 import { get, pick } from "lodash";
 import { Storage } from "@squareboat/nest-storage";
-import { CompressImageResponse, MediaWorkerOptions } from "../options";
+import type { CompressImageResponse, MediaWorkerOptions } from "../options";
 import { MEDIA_WORKER_LIB_OPTIONS } from "../constant";
 
 @Injectable()

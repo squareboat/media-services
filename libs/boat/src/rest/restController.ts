@@ -1,6 +1,6 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { Transformable } from '../transformers/transformable';
-import { Response } from './interfaces';
+import type { Response } from './interfaces';
 
 @Controller('health')
 export class RestController extends Transformable {

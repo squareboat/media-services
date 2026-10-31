@@ -1,6 +1,6 @@
-import * as ffmpeg from "fluent-ffmpeg";
+import ffmpeg from "fluent-ffmpeg";
 import { Injectable, Inject } from "@nestjs/common";
-import {
+import type {
   MediaWorkerOptions,
   VideoCompressInputs,
   VideoVariant,
