@@ -52,11 +52,12 @@ export class CompressImage {
 
     s.withMetadata();
 
-    return {
-      meta: await s.metadata(),
-      stats: await s.stats(),
-      buffer: await s.toBuffer(),
-    };
+    const meta = await s.metadata();
+    const stats = await s.stats();
+    const { data, info } = await s.toBuffer({ resolveWithObject: true });
+
+    // `meta` describes the input image; `format` is the format written out
+    return { meta, stats, buffer: data, format: info.format };
   }
 
   async compressImage(
@@ -114,7 +115,7 @@ export class CompressImage {
 
       newPromises.push(
         Storage.disk(this.options.storageDisk).put(path, response.res.buffer, {
-          mimeType: response.res.meta.format,
+          mimeType: `image/${response.res.format}`,
         })
       );
     }
