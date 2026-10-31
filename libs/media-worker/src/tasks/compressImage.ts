@@ -123,7 +123,18 @@ export class CompressImage {
       );
     }
 
-    await Promise.allSettled(newPromises);
+    // Wait for every upload, then fail the invocation if any of them failed,
+    // so Lambda retries the S3 event (or sends it to the DLQ)
+    const results = await Promise.allSettled(newPromises);
+    const failed = results.filter(
+      (r): r is PromiseRejectedResult => r.status === "rejected"
+    );
+    if (failed.length) {
+      throw new AggregateError(
+        failed.map((r) => r.reason),
+        `${failed.length} of ${results.length} image variant uploads failed`
+      );
+    }
 
     return payload;
   }
