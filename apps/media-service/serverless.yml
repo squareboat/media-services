@@ -1,6 +1,6 @@
 func:
   image: 851725511059.dkr.ecr.us-east-1.amazonaws.com/media-services:latest
-  # handler: dist/apps/media-service/src/main.handler
+  # handler: dist/apps/media-service/src/main.handler  # zip deploy: needs NODE_OPTIONS from infra env.yml
   memorySize: 2048
   ephemeralStorageSize: 5024
   iamRoleStatementsName: ${self:custom.roles.mediaServiceRole.name}
