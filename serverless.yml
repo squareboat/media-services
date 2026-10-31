@@ -22,7 +22,9 @@ provider:
   logs:
     restApi: true
     websocket: true
-  iamRoleStatements: ${self:custom.roles.common.roles}
+  iam:
+    role:
+      statements: ${self:custom.roles.common.roles}
   environment: ${file(./infra/serverless/env.yml):environment}
   logRetentionInDays: 5
   ecr:
