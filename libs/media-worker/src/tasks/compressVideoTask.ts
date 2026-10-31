@@ -65,8 +65,9 @@ export class CompressVideo {
     option: VideoVariant
   ): Promise<void> {
     const { format, quality = "COMPRESS", dimensions } = option;
-    const ffmpegDir = this.options.isLocal ? process.cwd() : "/usr/bin";
-    const ffmpegPath = path.join(ffmpegDir, "ffmpeg");
+    const ffmpegPath = this.options.isLocal
+      ? this.options.ffmpegPath || path.join(process.cwd(), "ffmpeg")
+      : "/usr/bin/ffmpeg";
     const crf = qualityCRFMap[quality];
     return new Promise((resolve, reject) => {
       const command = ffmpeg(inputPath)

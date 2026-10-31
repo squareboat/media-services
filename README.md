@@ -77,6 +77,8 @@ functions:
 ## Development
 
 - `npm run build`, `npm run lint`, `npm test`
+- Local runs (`NODE_ENV=local`): set `FFMPEG_PATH` to a local ffmpeg binary (the `ffmpeg` file in this repo is for Linux x86-64; the Docker image copies it to `/usr/bin/ffmpeg`).
+- Local S3: set `AWS_S3_ENDPOINT` (and `AWS_S3_FORCE_PATH_STYLE=true`) to use an S3-compatible server such as MinIO.
 
 ## Troubleshooting
 
